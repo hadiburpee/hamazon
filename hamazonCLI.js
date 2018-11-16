@@ -4,7 +4,7 @@ var Table = require("cli-table");
 
 var table = new Table({
     head: ["Prod No.", "Product", "Department", "Price" , "Quantity"],
-    colWidths: [100, 200, 200, 200, 100]
+    colWidths: [10, 20, 20, 20, 10]
 });
 
 var connection = mysql.createConnection({
@@ -28,10 +28,7 @@ connection.connect(function(err) {
 function displayProducts(){
     connection.query("SELECT * FROM products", function(err, res){
         if (err) throw err;
-        // console.log(res);
-        // console.log("\n+++++++++++++++++");
-        // console.log(res[0].department_name);
-        console.log("\nProduct No. || Name ||")
+
         for_a_Loop(res);
         connection.end();
     })
@@ -39,9 +36,9 @@ function displayProducts(){
 
 function for_a_Loop(res){
     for(i=0; i<res.length; i++){
-        console.log(
-            "\n" + res[i].item_id +
-            " " + res[i].product_name
+        table.push(
+            [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
         )
     }
+    console.log(table.toString());
 }
