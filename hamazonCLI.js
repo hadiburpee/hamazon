@@ -24,21 +24,28 @@ connection.connect(function(err) {
     displayProducts();
 });
 
-
+//displays the products for the customer
 function displayProducts(){
     connection.query("SELECT * FROM products", function(err, res){
         if (err) throw err;
-
-        for_a_Loop(res);
+        tableFormat(res);
         connection.end();
     })
 }
 
-function for_a_Loop(res){
+//formats the data to display in a table
+function tableFormat(res){
     for(i=0; i<res.length; i++){
         table.push(
             [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
         )
     }
     console.log(table.toString());
+}
+
+function userChoice(){
+    inquirer.prompt([
+
+    ])
+    .then({});
 }
