@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require("cli-table");
+var productDisp = false;
 
 var table = new Table({
     head: ["Prod No.", "Product", "Department", "Price" , "Quantity"],
@@ -22,7 +23,9 @@ connection.connect(function(err) {
     console.log("connected as id " + connection.threadId);
     // connection.end();
     displayProducts();
-    userChoice();
+    console.log('\n');
+    //Calls user choice after the formatted table is displayed
+    // userChoice();
 
 });
 
@@ -31,8 +34,15 @@ function displayProducts(){
     connection.query("SELECT * FROM products", function(err, res){
         if (err) throw err;
         tableFormat(res);
+        productDisp = true;
+        if(productDisp === true){
+            userChoice();
+            productDisp = false;
+        }
+        
         // connection.end();
     })
+
 }
 
 //formats the data to display in a table
@@ -43,8 +53,10 @@ function tableFormat(res){
         )
     }
     console.log(table.toString());
+    console.log("\n  ");
 }
 
+//check inventory for product number and quantity
 function checkInventory(product, quantity){
     var index = product - 1;
     connection.query(
@@ -60,13 +72,10 @@ function checkInventory(product, quantity){
             //update the quantity purchased with a function
             console.log("You've purchased " + quantity + " of " + res[index].product_name);
         }
-
     });
-
-
 }
 
-//user chooses the product they want
+//user chooses the product they want and quantity
 function userChoice(){
     inquirer
     .prompt([
