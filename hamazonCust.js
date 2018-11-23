@@ -58,19 +58,23 @@ function tableFormat(res){
 
 //check inventory for product number and quantity
 function checkInventory(product, quantity){
+    var newQuantity;
     var index = product - 1;
     connection.query(
         "SELECT * FROM products WHERE " + product,    
     function(err, res){
         if(err) throw err;
     
-        console.log(res[index]);
+        // console.log(res[index]);
         if(res[index].stock_quantity < quantity){
             console.log("Not enough stock");
         }
         else{
             //update the quantity purchased with a function
             console.log("You've purchased " + quantity + " of " + res[index].product_name);
+            newQuantity = res[index].stock_quantity - quantity;
+            updateInventory(product, newQuantity);
+
         }
     });
 }
@@ -91,7 +95,27 @@ function userChoice(){
     }
     ])
     .then(function(inqRes){
-        console.log("PN: " + inqRes.product + "\nQT: " + inqRes.quantity);
+        // console.log("PN: " + inqRes.product + "\nQT: " + inqRes.quantity);
         checkInventory(inqRes.product, inqRes.quantity);
     });
+}
+
+//updates the inventory in the database
+function updateInventory(product, quantity){
+    connection.query(
+        
+        "UPDATE products SET ? WHERE ?",
+        [{
+            stock_quantity: quantity,
+        },
+        {
+            item_id: product
+        }
+    ],
+    function(err, res){
+        if(err) throw err;
+        console.log("new quantity: " + res);
+    }
+    )
+
 }
