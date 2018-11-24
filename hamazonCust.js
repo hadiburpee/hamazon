@@ -29,6 +29,7 @@ var connection = mysql.createConnection({
 
 // });
 
+
 switch(productDisp){
     case false:
         displayProducts()
@@ -127,6 +128,6 @@ function updateInventory(product, quantity){
 
 }
 
-module.exports = {};
+// module.exports = {};
 
 
