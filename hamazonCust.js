@@ -18,32 +18,39 @@ var connection = mysql.createConnection({
 
 
 //test connection to DB
-connection.connect(function(err) {
-    if (err) throw err;
-    console.log("connected as id " + connection.threadId);
-    // connection.end();
-    displayProducts();
-    console.log('\n');
-    //Calls user choice after the formatted table is displayed
-    // userChoice();
+// connection.connect(function(err) {
+//     if (err) throw err;
+//     console.log("connected as id " + connection.threadId);
+//     // connection.end();
+//     displayProducts();
+//     console.log('\n');
+//     //Calls user choice after the formatted table is displayed
+//     // userChoice();
 
-});
+// });
+
+switch(productDisp){
+    case false:
+        displayProducts()
+        productDisp = true
+        //calls userChoice function after 200 milliseconds
+        setTimeout(userChoice,200)
+        break;
+    case true:       
+        productDisp = false
+        break;        
+}
 
 //displays the products for the customer
+
 function displayProducts(){
     connection.query("SELECT * FROM products", function(err, res){
         if (err) throw err;
         tableFormat(res);
-        productDisp = true;
-        if(productDisp === true){
-            userChoice();
-            productDisp = false;
-        }
-        
-        // connection.end();
     })
 
 }
+
 
 //formats the data to display in a table
 function tableFormat(res){
@@ -114,8 +121,12 @@ function updateInventory(product, quantity){
     ],
     function(err, res){
         if(err) throw err;
-        console.log("new quantity: " + res);
+        // console.log("new quantity: " + res);
     }
     )
 
 }
+
+module.exports = {};
+
+
