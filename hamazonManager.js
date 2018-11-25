@@ -3,10 +3,7 @@ var inquirer = require("inquirer");
 var Table = require("cli-table");
 var productDisp = false;
 
-var table = new Table({
-    head: ["Prod No.", "Product", "Department", "Price" , "Quantity"],
-    colWidths: [10, 20, 20, 20, 10]
-});
+
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -42,7 +39,7 @@ function managerChoice(){
             case "View Low Inventory":
                 console.log("you have selected to view low inventory")
                 displayLowInventory()
-                // setTimeout(managerChoice,200)
+                setTimeout(managerChoice,200)
                 break;
             case "Add to Inventory":
                 console.log("you have sleected add to inventory")
@@ -69,6 +66,11 @@ function displayProducts(){
 
 //formats the data to display in a table
 function tableFormat(res){
+    var table = new Table({
+        head: ["Prod No.", "Product", "Department", "Price" , "Quantity"],
+        colWidths: [10, 20, 20, 20, 10]
+    });
+    
     for(i=0; i<res.length; i++){
         table.push(
             [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
@@ -76,6 +78,7 @@ function tableFormat(res){
     }
     console.log(table.toString());
     console.log("\n  ");
+    
 }
 
 //displays low inventory products
