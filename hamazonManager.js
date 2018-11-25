@@ -13,7 +13,7 @@ var connection = mysql.createConnection({
     port: "3306",
     user: "root",
     password: "YOURPASSWORD",
-    database: "hamazonDB"
+    database: "hamazonDB1"
 });
 
 //doesn't work becasue there are function calls in hamazoncust.js
@@ -41,7 +41,7 @@ function managerChoice(){
                 break;
             case "View Low Inventory":
                 console.log("you have selected to view low inventory")
-                // displayLowInventory()
+                displayLowInventory()
                 // setTimeout(managerChoice,200)
                 break;
             case "Add to Inventory":
@@ -51,7 +51,7 @@ function managerChoice(){
                 break;
             case "Add New Product":
                 console.log("you have selected to add a product")
-
+                createInventory();
                 // setTimeout(managerChoice,200)
                 break;
         }
@@ -79,20 +79,18 @@ function tableFormat(res){
 }
 
 //displays low inventory products
-// function displayLowInventory(){
-//     connection.query(
-//         "SELECT FROM products WHERE ?",
-//         {
-//             stock_quantity: 5
-//         },
+function displayLowInventory(){
+    connection.query(
+        "SELECT * FROM products WHERE stock_quantity <=50",
 
-//     function(err, res){
-//         if(err) throw err;
-//         // console.log("new quantity: " + res);
-//     }
-//     )
+    function(err, res){
+        if(err) throw err;
+        tableFormat(res);
+        // console.log("new quantity: " + res);
+    }
+    )
 
-// }
+}
 
 //adds to inventory
 function addInventory(){
@@ -101,17 +99,17 @@ function addInventory(){
     ([{
             type: "input",
             name: "item",
-            message: "Which product would you like to add inventory?"
+            message: "Which product would you like to change the inventory on?"
         },
         {
             type: "input",
             name: "quantity",
-            message: "How many would you like to add? "
+            message: "Please list the new quantity: "
         }
 
     ]).then(function(inqRes){
 
-        console.log(inqRes.item)
+        // console.log(inqRes.item)
 
     connection.query(
         "UPDATE products SET ? WHERE ?",
@@ -131,7 +129,40 @@ function addInventory(){
 
 //adds new product
 function createInventory(){
+    inquirer
+    .prompt
+    ([{
+            type: "input",
+            name: "name",
+            message: "What is the name of the new product: "
+        },
+        {
+            type: "input",
+            name: "department",
+            message: "List the department it belongs to: "
+        },
+        {
+            type: "input",
+            name: "price",
+            message: "List the item price: "
+        },
+        {
+            type: "input",
+            name: "quantity",
+            message: "List the item quantity: "
+        }
 
+    ]).then(function(inqRes){
+        console.log(inqRes);
+        connection.query(
+            "INSERT INTO products (product_name, department_name, price, stock_quantity) VALUES ( ?, ?, ?, ?)",
+            [inqRes.name, inqRes.department, inqRes.price, inqRes.quantity],   
+            function(err){
+                if(err) throw err;
+                console.log("New product inserted!");
+            })
+});
+// displayProducts();
 }
 
 

@@ -13,21 +13,21 @@ var connection = mysql.createConnection({
     port: "3306",
     user: "root",
     password: "YOURPASSWORD",
-    database: "hamazonDB"
+    database: "hamazonDB1"
 });
 
 
 //test connection to DB
-// connection.connect(function(err) {
-//     if (err) throw err;
-//     console.log("connected as id " + connection.threadId);
-//     // connection.end();
-//     displayProducts();
-//     console.log('\n');
-//     //Calls user choice after the formatted table is displayed
-//     // userChoice();
+connection.connect(function(err) {
+    if (err) throw err;
+    console.log("connected as id " + connection.threadId);
+    // connection.end();
+    // displayProducts();
+    // console.log('\n');
+    //Calls user choice after the formatted table is displayed
+    // userChoice();
 
-// });
+});
 
 
 switch(productDisp){
